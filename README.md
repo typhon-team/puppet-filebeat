@@ -38,7 +38,7 @@ with required configurations.
 
 ### Upgrading to Filebeat 6.x
 
-To upgrade to Filebeat 6.x, simply set `$filebeat::major_version` to `6` and `$filebeat::package_ensure` to `latest`.
+To upgrade to Filebeat 6.x, simply set `$filebeat_legacy::major_version` to `6` and `$filebeat_legacy::package_ensure` to `latest`.
 
 
 ### Setup Requirements
@@ -107,7 +107,7 @@ be shipped. `doc_type` is what logstash views as the type parameter if you'd lik
 apply conditional filters.
 
 ```puppet
-filebeat::prospector { 'syslogs':
+filebeat_legacy::prospector { 'syslogs':
   paths    => [
     '/var/log/auth.log',
     '/var/log/syslog',
@@ -203,16 +203,16 @@ flag.
  - [**Public Classes**](#public-classes)
     - [Class: filebeat](#class-filebeat)
  - [**Private Classes**](#private-classes)
-    - [Class: filebeat::config](#class-filebeatconfig)
-    - [Class: filebeat::install](#class-filebeatinstall)
-    - [Class: filebeat::params](#class-filebeatparams)
-    - [Class: filebeat::repo](#class-filebeatrepo)
-    - [Class: filebeat::service](#class-filebeatservice)
-    - [Class: filebeat::install::linux](#class-filebeatinstalllinux)
-    - [Class: filebeat::install::windows](#class-filebeatinstallwindows)
+    - [Class: filebeat_legacy::config](#class-filebeatconfig)
+    - [Class: filebeat_legacy::install](#class-filebeatinstall)
+    - [Class: filebeat_legacy::params](#class-filebeatparams)
+    - [Class: filebeat_legacy::repo](#class-filebeatrepo)
+    - [Class: filebeat_legacy::service](#class-filebeatservice)
+    - [Class: filebeat_legacy::install::linux](#class-filebeatinstalllinux)
+    - [Class: filebeat_legacy::install::windows](#class-filebeatinstallwindows)
  - [**Public Defines**](#public-defines)
-    - [Define: filebeat::prospector](#define-filebeatprospector)
-    - [Define: filebeat::processors](#define-filebeatprocessor)
+    - [Define: filebeat_legacy::prospector](#define-filebeatprospector)
+    - [Define: filebeat_legacy::processors](#define-filebeatprocessor)
 
 ### Public Classes
 
@@ -265,44 +265,44 @@ Installs and configures filebeat.
 
 ### Private Classes
 
-#### Class: `filebeat::config`
+#### Class: `filebeat_legacy::config`
 
 Creates the configuration files required for filebeat (but not the prospectors)
 
-#### Class: `filebeat::install`
+#### Class: `filebeat_legacy::install`
 
 Calls the correct installer class based on the kernel fact.
 
-#### Class: `filebeat::params`
+#### Class: `filebeat_legacy::params`
 
 Sets default parameters for `filebeat` based on the OS and other facts.
 
-#### Class: `filebeat::repo`
+#### Class: `filebeat_legacy::repo`
 
 Installs the yum or apt repository for the system package manager to install filebeat.
 
-#### Class: `filebeat::service`
+#### Class: `filebeat_legacy::service`
 
 Configures and manages the filebeat service.
 
-#### Class: `filebeat::install::linux`
+#### Class: `filebeat_legacy::install::linux`
 
 Install the filebeat package on Linux kernels.
 
-#### Class: `filebeat::install::windows`
+#### Class: `filebeat_legacy::install::windows`
 
 Downloads, extracts, and installs the filebeat zip file in Windows.
 
 ### Public Defines
 
-#### Define: `filebeat::prospector`
+#### Define: `filebeat_legacy::prospector`
 
 Installs a configuration file for a prospector.
 
 Be sure to read the [filebeat configuration details](https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-configuration-details.html)
 to fully understand what these parameters do.
 
-**Parameters for `filebeat::prospector`**
+**Parameters for `filebeat_legacy::prospector`**
   - `ensure`: The ensure parameter on the prospector configuration file. (default: present)
   - `paths`: [Array] The paths, or blobs that should be handled by the prospector. (required)
   - `exclude_files`: [Array] Files that match any regex in the list are excluded from filebeat (default: [])

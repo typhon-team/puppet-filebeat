@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'filebeat' do
   let :pre_condition do
-    'include ::filebeat'
+    'include ::filebeat_legacy_legacy'
   end
 
   on_supported_os(facterversion: '2.4').each do |os, os_facts|
@@ -14,12 +14,12 @@ describe 'filebeat' do
       end
 
       it { is_expected.to contain_class('filebeat') }
-      it { is_expected.to contain_class('filebeat::params') }
-      it { is_expected.to contain_anchor('filebeat::begin') }
-      it { is_expected.to contain_anchor('filebeat::end') }
-      it { is_expected.to contain_class('filebeat::install') }
-      it { is_expected.to contain_class('filebeat::config') }
-      it { is_expected.to contain_class('filebeat::service') }
+      it { is_expected.to contain_class('filebeat_legacy::params') }
+      it { is_expected.to contain_anchor('filebeat_legacy::begin') }
+      it { is_expected.to contain_anchor('filebeat_legacy::end') }
+      it { is_expected.to contain_class('filebeat_legacy::install') }
+      it { is_expected.to contain_class('filebeat_legacy::config') }
+      it { is_expected.to contain_class('filebeat_legacy::service') }
     end
   end
 end

@@ -1,12 +1,12 @@
-# filebeat::service
+# filebeat_legacy::service
 #
 # Manage the filebeat service
 #
 # @summary Manage the filebeat service
-class filebeat::service {
+class filebeat_legacy::service {
   service { 'filebeat':
-    ensure   => $filebeat::real_service_ensure,
-    enable   => $filebeat::service_enable,
-    provider => $filebeat::service_provider,
+    ensure   => $filebeat_legacy::real_service_ensure,
+    enable   => $filebeat_legacy::service_enable,
+    provider => $filebeat_legacy::service_provider,
   }
 }

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe 'filebeat::config' do
+describe 'filebeat_legacy::config' do
   let :pre_condition do
-    'include ::filebeat'
+    'include ::filebeat_legacy_legacy'
   end
 
   on_supported_os(facterversion: '2.4').each do |os, os_facts|

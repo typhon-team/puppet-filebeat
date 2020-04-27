@@ -1,60 +1,60 @@
-# filebeat::config
+# filebeat_legacy::config
 #
 # Manage the configuration files for filebeat
 #
 # @summary A private class to manage the filebeat config file
-class filebeat::config {
-  $major_version = $filebeat::major_version
+class filebeat_legacy::config {
+  $major_version = $filebeat_legacy::major_version
 
   if versioncmp($major_version, '6') >= 0 {
     $filebeat_config = delete_undef_values({
-      'shutdown_timeout'  => $filebeat::shutdown_timeout,
-      'name'              => $filebeat::beat_name,
-      'tags'              => $filebeat::tags,
-      'max_procs'         => $filebeat::max_procs,
-      'fields'            => $filebeat::fields,
-      'fields_under_root' => $filebeat::fields_under_root,
+      'shutdown_timeout'  => $filebeat_legacy::shutdown_timeout,
+      'name'              => $filebeat_legacy::beat_name,
+      'tags'              => $filebeat_legacy::tags,
+      'max_procs'         => $filebeat_legacy::max_procs,
+      'fields'            => $filebeat_legacy::fields,
+      'fields_under_root' => $filebeat_legacy::fields_under_root,
       'filebeat'          => {
-        'registry_file'    => $filebeat::registry_file,
-        'config_dir'       => $filebeat::config_dir,
-        'shutdown_timeout' => $filebeat::shutdown_timeout,
+        'registry_file'    => $filebeat_legacy::registry_file,
+        'config_dir'       => $filebeat_legacy::config_dir,
+        'shutdown_timeout' => $filebeat_legacy::shutdown_timeout,
       },
-      'output'            => $filebeat::outputs,
-      'shipper'           => $filebeat::shipper,
-      'logging'           => $filebeat::logging,
-      'runoptions'        => $filebeat::run_options,
-      'processors'        => $filebeat::processors,
+      'output'            => $filebeat_legacy::outputs,
+      'shipper'           => $filebeat_legacy::shipper,
+      'logging'           => $filebeat_legacy::logging,
+      'runoptions'        => $filebeat_legacy::run_options,
+      'processors'        => $filebeat_legacy::processors,
     })
   } else {
     $filebeat_config = delete_undef_values({
-      'shutdown_timeout'  => $filebeat::shutdown_timeout,
-      'name'              => $filebeat::beat_name,
-      'tags'              => $filebeat::tags,
-      'queue_size'        => $filebeat::queue_size,
-      'max_procs'         => $filebeat::max_procs,
-      'fields'            => $filebeat::fields,
-      'fields_under_root' => $filebeat::fields_under_root,
+      'shutdown_timeout'  => $filebeat_legacy::shutdown_timeout,
+      'name'              => $filebeat_legacy::beat_name,
+      'tags'              => $filebeat_legacy::tags,
+      'queue_size'        => $filebeat_legacy::queue_size,
+      'max_procs'         => $filebeat_legacy::max_procs,
+      'fields'            => $filebeat_legacy::fields,
+      'fields_under_root' => $filebeat_legacy::fields_under_root,
       'filebeat'          => {
-        'spool_size'       => $filebeat::spool_size,
-        'idle_timeout'     => $filebeat::idle_timeout,
-        'registry_file'    => $filebeat::registry_file,
-        'publish_async'    => $filebeat::publish_async,
-        'config_dir'       => $filebeat::config_dir,
-        'shutdown_timeout' => $filebeat::shutdown_timeout,
+        'spool_size'       => $filebeat_legacy::spool_size,
+        'idle_timeout'     => $filebeat_legacy::idle_timeout,
+        'registry_file'    => $filebeat_legacy::registry_file,
+        'publish_async'    => $filebeat_legacy::publish_async,
+        'config_dir'       => $filebeat_legacy::config_dir,
+        'shutdown_timeout' => $filebeat_legacy::shutdown_timeout,
       },
-      'output'            => $filebeat::outputs,
-      'shipper'           => $filebeat::shipper,
-      'logging'           => $filebeat::logging,
-      'runoptions'        => $filebeat::run_options,
-      'processors'        => $filebeat::processors,
+      'output'            => $filebeat_legacy::outputs,
+      'shipper'           => $filebeat_legacy::shipper,
+      'logging'           => $filebeat_legacy::logging,
+      'runoptions'        => $filebeat_legacy::run_options,
+      'processors'        => $filebeat_legacy::processors,
     })
   }
 
-  Filebeat::Prospector <| |> -> File['filebeat.yml']
+  Filebeat_legacy::Prospector <| |> -> File['filebeat.yml']
 
   case $::kernel {
     'Linux'   : {
-      $validate_cmd = $filebeat::disable_config_test ? {
+      $validate_cmd = $filebeat_legacy::disable_config_test ? {
         true    => undef,
         default => $major_version ? {
           '5'     => '/usr/share/filebeat/bin/filebeat -N -configtest -c %',
@@ -63,58 +63,58 @@ class filebeat::config {
       }
 
       file {'filebeat.yml':
-        ensure       => $filebeat::file_ensure,
-        path         => $filebeat::config_file,
-        content      => template($filebeat::conf_template),
-        owner        => $filebeat::config_file_owner,
-        group        => $filebeat::config_file_group,
-        mode         => $filebeat::config_file_mode,
+        ensure       => $filebeat_legacy::file_ensure,
+        path         => $filebeat_legacy::config_file,
+        content      => template($filebeat_legacy::conf_template),
+        owner        => $filebeat_legacy::config_file_owner,
+        group        => $filebeat_legacy::config_file_group,
+        mode         => $filebeat_legacy::config_file_mode,
         validate_cmd => $validate_cmd,
         notify       => Service['filebeat'],
         require      => File['filebeat-config-dir'],
       }
 
       file {'filebeat-config-dir':
-        ensure  => $filebeat::directory_ensure,
-        path    => $filebeat::config_dir,
-        owner   => $filebeat::config_dir_owner,
-        group   => $filebeat::config_dir_group,
-        mode    => $filebeat::config_dir_mode,
-        recurse => $filebeat::purge_conf_dir,
-        purge   => $filebeat::purge_conf_dir,
+        ensure  => $filebeat_legacy::directory_ensure,
+        path    => $filebeat_legacy::config_dir,
+        owner   => $filebeat_legacy::config_dir_owner,
+        group   => $filebeat_legacy::config_dir_group,
+        mode    => $filebeat_legacy::config_dir_mode,
+        recurse => $filebeat_legacy::purge_conf_dir,
+        purge   => $filebeat_legacy::purge_conf_dir,
         force   => true,
       }
     } # end Linux
 
     'Windows' : {
-      $cmd_install_dir = regsubst($filebeat::install_dir, '/', '\\', 'G')
+      $cmd_install_dir = regsubst($filebeat_legacy::install_dir, '/', '\\', 'G')
       $filebeat_path = join([$cmd_install_dir, 'Filebeat', 'filebeat.exe'], '\\')
 
-      $validate_cmd = $filebeat::disable_config_test ? {
+      $validate_cmd = $filebeat_legacy::disable_config_test ? {
         true    => undef,
         default => "\"${filebeat_path}\" -N -configtest -c \"%\"",
       }
 
       file {'filebeat.yml':
-        ensure       => $filebeat::file_ensure,
-        path         => $filebeat::config_file,
-        content      => template($filebeat::conf_template),
+        ensure       => $filebeat_legacy::file_ensure,
+        path         => $filebeat_legacy::config_file,
+        content      => template($filebeat_legacy::conf_template),
         validate_cmd => $validate_cmd,
         notify       => Service['filebeat'],
         require      => File['filebeat-config-dir'],
       }
 
       file {'filebeat-config-dir':
-        ensure  => $filebeat::directory_ensure,
-        path    => $filebeat::config_dir,
-        recurse => $filebeat::purge_conf_dir,
-        purge   => $filebeat::purge_conf_dir,
+        ensure  => $filebeat_legacy::directory_ensure,
+        path    => $filebeat_legacy::config_dir,
+        recurse => $filebeat_legacy::purge_conf_dir,
+        purge   => $filebeat_legacy::purge_conf_dir,
         force   => true,
       }
     } # end Windows
 
     default : {
-      fail($filebeat::kernel_fail_message)
+      fail($filebeat_legacy::kernel_fail_message)
     }
   }
 }

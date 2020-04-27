@@ -1,33 +1,33 @@
-# filebeat::install
+# filebeat_legacy::install
 #
 # A private class to manage the installation of Filebeat
 #
 # @summary A private class that manages the install of Filebeat
-class filebeat::install {
-  anchor { 'filebeat::install::begin': }
+class filebeat_legacy::install {
+  anchor { 'filebeat_legacy::install::begin': }
 
   case $::kernel {
     'Linux':   {
-      class{ '::filebeat::install::linux':
-        notify => Class['filebeat::service'],
+      class{ '::filebeat_legacy::install::linux':
+        notify => Class['filebeat_legacy::service'],
       }
-      Anchor['filebeat::install::begin'] -> Class['filebeat::install::linux'] -> Anchor['filebeat::install::end']
-      if $::filebeat::manage_repo {
-        class { '::filebeat::repo': }
-        Class['filebeat::repo'] -> Class['filebeat::install::linux']
+      Anchor['filebeat_legacy::install::begin'] -> Class['filebeat_legacy::install::linux'] -> Anchor['filebeat_legacy::install::end']
+      if $::filebeat_legacy::manage_repo {
+        class { '::filebeat_legacy::repo': }
+        Class['filebeat_legacy::repo'] -> Class['filebeat_legacy::install::linux']
       }
     }
     'Windows': {
-      class{'::filebeat::install::windows':
-        notify => Class['filebeat::service'],
+      class{'::filebeat_legacy::install::windows':
+        notify => Class['filebeat_legacy::service'],
       }
-      Anchor['filebeat::install::begin'] -> Class['filebeat::install::windows'] -> Anchor['filebeat::install::end']
+      Anchor['filebeat_legacy::install::begin'] -> Class['filebeat_legacy::install::windows'] -> Anchor['filebeat_legacy::install::end']
     }
     default:   {
-      fail($filebeat::kernel_fail_message)
+      fail($filebeat_legacy::kernel_fail_message)
     }
   }
 
-  anchor { 'filebeat::install::end': }
+  anchor { 'filebeat_legacy::install::end': }
 
 }

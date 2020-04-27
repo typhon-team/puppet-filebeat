@@ -1,9 +1,9 @@
-# filebeat::params
+# filebeat_legacy::params
 #
 # Set a number of default parameters
 #
 # @summary Set a bunch of default parameters
-class filebeat::params {
+class filebeat_legacy::params {
   $manage_repo          = true
   $major_version        = '5'
   $service_ensure       = running

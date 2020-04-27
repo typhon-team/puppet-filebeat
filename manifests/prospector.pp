@@ -1,12 +1,12 @@
-# filebeat::prospector
+# filebeat_legacy::prospector
 #
 # A description of what this defined type does
 #
 # @summary A short summary of the purpose of this defined type.
 #
 # @example
-#   filebeat::prospector { 'namevar': }
-define filebeat::prospector (
+#   filebeat_legacy::prospector { 'namevar': }
+define filebeat_legacy::prospector (
   $ensure                = present,
   $paths                 = [],
   $exclude_files         = [],
@@ -49,13 +49,13 @@ define filebeat::prospector (
 
   case $::kernel {
     'Linux' : {
-      if !$filebeat::disable_config_test {
+      if !$filebeat_legacy::disable_config_test {
         file { "filebeat-${name}":
           ensure       => $ensure,
-          path         => "${filebeat::config_dir}/${name}.yml",
+          path         => "${filebeat_legacy::config_dir}/${name}.yml",
           owner        => 'root',
           group        => 'root',
-          mode         => $::filebeat::config_file_mode,
+          mode         => $::filebeat_legacy::config_file_mode,
           content      => template("${module_name}/${prospector_template}"),
           validate_cmd => '/usr/share/filebeat/bin/filebeat -N -configtest -c %',
           notify       => Service['filebeat'],
@@ -63,10 +63,10 @@ define filebeat::prospector (
       } else {
         file { "filebeat-${name}":
           ensure  => $ensure,
-          path    => "${filebeat::config_dir}/${name}.yml",
+          path    => "${filebeat_legacy::config_dir}/${name}.yml",
           owner   => 'root',
           group   => 'root',
-          mode    => $::filebeat::config_file_mode,
+          mode    => $::filebeat_legacy::config_file_mode,
           content => template("${module_name}/${prospector_template}"),
           notify  => Service['filebeat'],
         }
@@ -76,10 +76,10 @@ define filebeat::prospector (
     'Windows' : {
       $filebeat_path = 'c:\Program Files\Filebeat\filebeat.exe'
 
-      if !$filebeat::disable_config_test {
+      if !$filebeat_legacy::disable_config_test {
         file { "filebeat-${name}":
           ensure       => $ensure,
-          path         => "${filebeat::config_dir}/${name}.yml",
+          path         => "${filebeat_legacy::config_dir}/${name}.yml",
           content      => template("${module_name}/${prospector_template}"),
           validate_cmd => "\"${filebeat_path}\" -N -configtest -c \"%\"",
           notify       => Service['filebeat'],
@@ -87,14 +87,14 @@ define filebeat::prospector (
       } else {
         file { "filebeat-${name}":
           ensure  => $ensure,
-          path    => "${filebeat::config_dir}/${name}.yml",
+          path    => "${filebeat_legacy::config_dir}/${name}.yml",
           content => template("${module_name}/${prospector_template}"),
           notify  => Service['filebeat'],
         }
       }
     }
     default : {
-      fail($filebeat::kernel_fail_message)
+      fail($filebeat_legacy::kernel_fail_message)
     }
   }
 }

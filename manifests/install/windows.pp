@@ -1,27 +1,27 @@
-# filebeat::install::windows
+# filebeat_legacy::install::windows
 #
 # Download and install filebeat on Windows
 #
 # @summary A private class that installs filebeat on Windows
 #
-class filebeat::install::windows {
+class filebeat_legacy::install::windows {
   # I'd like to use chocolatey to do this install, but the package for chocolatey is
   # failing for updates and seems rather unpredictable at the moment. We may revisit
   # that in the future as it would greatly simplify this code and basically reduce it to
   # one package resource with type => chocolatey....
 
-  $filename = regsubst($filebeat::real_download_url, '^https?.*\/([^\/]+)\.[^.].*', '\1')
+  $filename = regsubst($filebeat_legacy::real_download_url, '^https?.*\/([^\/]+)\.[^.].*', '\1')
   $foldername = 'Filebeat'
-  $zip_file = join([$filebeat::tmp_dir, "${filename}.zip"], '/')
-  $install_folder = join([$filebeat::install_dir, $foldername], '/')
+  $zip_file = join([$filebeat_legacy::tmp_dir, "${filename}.zip"], '/')
+  $install_folder = join([$filebeat_legacy::install_dir, $foldername], '/')
   $version_file = join([$install_folder, $filename], '/')
 
   Exec {
     provider => powershell,
   }
 
-  if ! defined(File[$filebeat::install_dir]) {
-    file { $filebeat::install_dir:
+  if ! defined(File[$filebeat_legacy::install_dir]) {
+    file { $filebeat_legacy::install_dir:
       ensure => directory,
     }
   }
@@ -31,17 +31,17 @@ class filebeat::install::windows {
   # https://github.com/voxpupuli/puppet-archive/blob/master/manifests/init.pp#L31
   # I'm not choosing to impose those dependencies on anyone at this time...
   archive { $zip_file:
-    source       => $filebeat::real_download_url,
+    source       => $filebeat_legacy::real_download_url,
     cleanup      => false,
     creates      => $version_file,
-    proxy_server => $filebeat::proxy_address,
+    proxy_server => $filebeat_legacy::proxy_address,
   }
 
   exec { "unzip ${filename}":
-    command => "\$sh=New-Object -COM Shell.Application;\$sh.namespace((Convert-Path '${filebeat::install_dir}')).Copyhere(\$sh.namespace((Convert-Path '${zip_file}')).items(), 16)", # lint:ignore:140chars
+    command => "\$sh=New-Object -COM Shell.Application;\$sh.namespace((Convert-Path '${filebeat_legacy::install_dir}')).Copyhere(\$sh.namespace((Convert-Path '${zip_file}')).items(), 16)", # lint:ignore:140chars
     creates => $version_file,
     require => [
-      File[$filebeat::install_dir],
+      File[$filebeat_legacy::install_dir],
       Archive[$zip_file],
     ],
   }
@@ -62,7 +62,7 @@ class filebeat::install::windows {
   }
 
   exec { "rename ${filename}":
-    command => "Remove-Item '${install_folder}' -Recurse -Force -ErrorAction SilentlyContinue;Rename-Item '${filebeat::install_dir}/${filename}' '${install_folder}'", # lint:ignore:140chars
+    command => "Remove-Item '${install_folder}' -Recurse -Force -ErrorAction SilentlyContinue;Rename-Item '${filebeat_legacy::install_dir}/${filename}' '${install_folder}'", # lint:ignore:140chars
     creates => $version_file,
     require => Exec["stop service ${filename}"],
   }

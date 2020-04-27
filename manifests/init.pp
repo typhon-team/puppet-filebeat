@@ -44,56 +44,56 @@
 # @param prospectors [Hash] Prospectors that will be created. Commonly used to create prospectors using hiera
 # @param prospectors_merge [Boolean] Whether $prospectors should merge all hiera sources, or use simple automatic parameter lookup
 # proxy_address [String] Proxy server to use for downloading files
-class filebeat (
-  String  $package_ensure       = $filebeat::params::package_ensure,
-  Boolean $manage_repo          = $filebeat::params::manage_repo,
-  Enum['5','6'] $major_version     = $filebeat::params::major_version,
-  Variant[Boolean, Enum['stopped', 'running']] $service_ensure = $filebeat::params::service_ensure,
-  Boolean $service_enable = $filebeat::params::service_enable,
-  Optional[String]  $service_provider = $filebeat::params::service_provider,
+class filebeat_legacy (
+  String  $package_ensure       = $filebeat_legacy::params::package_ensure,
+  Boolean $manage_repo          = $filebeat_legacy::params::manage_repo,
+  Enum['5','6'] $major_version     = $filebeat_legacy::params::major_version,
+  Variant[Boolean, Enum['stopped', 'running']] $service_ensure = $filebeat_legacy::params::service_ensure,
+  Boolean $service_enable = $filebeat_legacy::params::service_enable,
+  Optional[String]  $service_provider = $filebeat_legacy::params::service_provider,
   Optional[Integer] $repo_priority = undef,
-  Integer $spool_size           = $filebeat::params::spool_size,
-  String  $idle_timeout         = $filebeat::params::idle_timeout,
-  Boolean $publish_async        = $filebeat::params::publish_async,
-  String  $registry_file        = $filebeat::params::registry_file,
-  String  $config_file          = $filebeat::params::config_file,
-  Optional[String] $config_file_owner = $filebeat::params::config_file_owner,
-  Optional[String] $config_file_group = $filebeat::params::config_file_group,
-  String[4,4]  $config_dir_mode = $filebeat::params::config_dir_mode,
-  String  $config_dir           = $filebeat::params::config_dir,
-  String[4,4]  $config_file_mode = $filebeat::params::config_file_mode,
-  Optional[String] $config_dir_owner = $filebeat::params::config_dir_owner,
-  Optional[String] $config_dir_group = $filebeat::params::config_dir_group,
-  Boolean $purge_conf_dir       = $filebeat::params::purge_conf_dir,
-  Hash    $outputs              = $filebeat::params::outputs,
-  Hash    $shipper              = $filebeat::params::shipper,
-  Hash    $logging              = $filebeat::params::logging,
-  Hash    $run_options          = $filebeat::params::run_options,
-  String  $conf_template        = $filebeat::params::conf_template,
+  Integer $spool_size           = $filebeat_legacy::params::spool_size,
+  String  $idle_timeout         = $filebeat_legacy::params::idle_timeout,
+  Boolean $publish_async        = $filebeat_legacy::params::publish_async,
+  String  $registry_file        = $filebeat_legacy::params::registry_file,
+  String  $config_file          = $filebeat_legacy::params::config_file,
+  Optional[String] $config_file_owner = $filebeat_legacy::params::config_file_owner,
+  Optional[String] $config_file_group = $filebeat_legacy::params::config_file_group,
+  String[4,4]  $config_dir_mode = $filebeat_legacy::params::config_dir_mode,
+  String  $config_dir           = $filebeat_legacy::params::config_dir,
+  String[4,4]  $config_file_mode = $filebeat_legacy::params::config_file_mode,
+  Optional[String] $config_dir_owner = $filebeat_legacy::params::config_dir_owner,
+  Optional[String] $config_dir_group = $filebeat_legacy::params::config_dir_group,
+  Boolean $purge_conf_dir       = $filebeat_legacy::params::purge_conf_dir,
+  Hash    $outputs              = $filebeat_legacy::params::outputs,
+  Hash    $shipper              = $filebeat_legacy::params::shipper,
+  Hash    $logging              = $filebeat_legacy::params::logging,
+  Hash    $run_options          = $filebeat_legacy::params::run_options,
+  String  $conf_template        = $filebeat_legacy::params::conf_template,
   Optional[Pattern[/^(http(?:s)?\:\/\/[a-zA-Z0-9]+(?:(?:\.|\-)[a-zA-Z0-9]+)+(?:\:\d+)?(?:\/[\w\-\.]+)*(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$/]] $download_url = undef, # lint:ignore:140chars
-  Optional[String]  $install_dir = $filebeat::params::install_dir,
-  String  $tmp_dir              = $filebeat::params::tmp_dir,
-  Integer $shutdown_timeout     = $filebeat::params::shutdown_timeout,
-  String  $beat_name            = $filebeat::params::beat_name,
-  Array   $tags                 = $filebeat::params::tags,
-  Integer $queue_size           = $filebeat::params::queue_size,
-  Optional[Integer] $max_procs  = $filebeat::params::max_procs,
-  Hash $fields                  = $filebeat::params::fields,
-  Boolean $fields_under_root    = $filebeat::params::fields_under_root,
-  Boolean $disable_config_test  = $filebeat::params::disable_config_test,
+  Optional[String]  $install_dir = $filebeat_legacy::params::install_dir,
+  String  $tmp_dir              = $filebeat_legacy::params::tmp_dir,
+  Integer $shutdown_timeout     = $filebeat_legacy::params::shutdown_timeout,
+  String  $beat_name            = $filebeat_legacy::params::beat_name,
+  Array   $tags                 = $filebeat_legacy::params::tags,
+  Integer $queue_size           = $filebeat_legacy::params::queue_size,
+  Optional[Integer] $max_procs  = $filebeat_legacy::params::max_procs,
+  Hash $fields                  = $filebeat_legacy::params::fields,
+  Boolean $fields_under_root    = $filebeat_legacy::params::fields_under_root,
+  Boolean $disable_config_test  = $filebeat_legacy::params::disable_config_test,
   Hash    $processors           = {},
   Hash    $prospectors          = {},
   Optional[Pattern[/^(http(?:s)?\:\/\/[a-zA-Z0-9]+(?:(?:\.|\-)[a-zA-Z0-9]+)+(?:\:\d+)?(?:\/[\w\-\.]+)*(?:\/?|\/\w+\.[a-zA-Z]{2,4}(?:\?[\w]+\=[\w\-]+)?)?(?:\&[\w]+\=[\w\-]+)*)$/]] $proxy_address = undef # lint:ignore:140chars
-) inherits filebeat::params {
+) inherits filebeat_legacy::params {
 
   include ::stdlib
 
   $real_download_url = $download_url ? {
-    undef   => "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-${package_ensure}-windows-${filebeat::params::url_arch}.zip",
+    undef   => "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-${package_ensure}-windows-${filebeat_legacy::params::url_arch}.zip",
     default => $download_url,
   }
 
-  if $config_file != $filebeat::params::config_file {
+  if $config_file != $filebeat_legacy::params::config_file {
     warning('You\'ve specified a non-standard config_file location - filebeat may fail to start unless you\'re doing something to fix this')
   }
 
@@ -112,22 +112,22 @@ class filebeat (
   # If we're removing filebeat, do things in a different order to make sure
   # we remove as much as possible
   if $package_ensure == 'absent' {
-    anchor { 'filebeat::begin': }
-    -> class { '::filebeat::config': }
-    -> class { '::filebeat::install': }
-    -> class { '::filebeat::service': }
-    -> anchor { 'filebeat::end': }
+    anchor { 'filebeat_legacy::begin': }
+    -> class { '::filebeat_legacy::config': }
+    -> class { '::filebeat_legacy::install': }
+    -> class { '::filebeat_legacy::service': }
+    -> anchor { 'filebeat_legacy::end': }
   } else {
-    anchor { 'filebeat::begin': }
-    -> class { '::filebeat::install': }
-    -> class { '::filebeat::config': }
-    -> class { '::filebeat::service': }
-    -> anchor { 'filebeat::end': }
+    anchor { 'filebeat_legacy::begin': }
+    -> class { '::filebeat_legacy::install': }
+    -> class { '::filebeat_legacy::config': }
+    -> class { '::filebeat_legacy::service': }
+    -> anchor { 'filebeat_legacy::end': }
   }
 
   if $package_ensure != 'absent' {
     if !empty($prospectors) {
-      create_resources('filebeat::prospector', $prospectors)
+      create_resources('filebeat_legacy::prospector', $prospectors)
     }
   }
 }
